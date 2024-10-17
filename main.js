@@ -19,46 +19,72 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   };
 
+  // Function to validate email field
+  window.validateFieldEmail = () => {
+    console.log("hello")
+    return validateField(emailField, emailError, validationRules.email);
+  };
+
+  // Function to validate password field
+  window.validateFieldPassword = () => {
+    return validateField(passwordField, passwordError, validationRules.password);
+  };
+
   const validateField = (field, errorElement, rules) => {
     let isValid = true;
+
+    // Clear all previous error announcements
+    emailError.setAttribute('aria-live', 'off');
+    passwordError.setAttribute('aria-live', 'off');
+
     if (rules.required && !field.value.trim()) {
       isValid = false;
       errorElement.textContent = `${field.name} is required.`;
+      errorElement.setAttribute('aria-live', 'assertive'); 
     } else if (rules.pattern && !rules.pattern.test(field.value)) {
       isValid = false;
       errorElement.textContent = rules.errorMessage;
+      errorElement.setAttribute('aria-live', 'assertive'); 
     } else if (rules.minLength && field.value.length < rules.minLength) {
       isValid = false;
       errorElement.textContent = rules.errorMessage;
+      errorElement.setAttribute('aria-live', 'assertive');
     } else {
       errorElement.textContent = '';
+      errorElement.setAttribute('aria-live', 'off'); 
     }
 
     field.setAttribute('aria-invalid', !isValid);
     return isValid;
   };
 
-  const onFieldBlur = (field, errorElement, rules) => {
+  const onFieldBlur = (field, errorElement, validateFunction) => {
     field.addEventListener('blur', () => {
-      validateField(field, errorElement, rules);
+      validateFunction();
+      errorElement.setAttribute('aria-live', 'off');
     });
   };
 
-  onFieldBlur(emailField, emailError, validationRules.email);
-  onFieldBlur(passwordField, passwordError, validationRules.password);
+  // Add focus event to announce errors only for focused field
+  const onFieldFocus = (field, errorElement) => {
+    field.addEventListener('focus', () => {
+      if (errorElement.textContent) {
+        errorElement.setAttribute('aria-live', 'assertive'); // Announce error for focused field
+      } else {
+        errorElement.setAttribute('aria-live', 'off'); // Clear if no error
+      }
+    });
+  };
+
+  onFieldBlur(emailField, emailError, validateFieldEmail);
+  onFieldBlur(passwordField, passwordError, validateFieldPassword);
+  onFieldFocus(emailField, emailError);
+  onFieldFocus(passwordField, passwordError);
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const isEmailValid = validateField(
-      emailField,
-      emailError,
-      validationRules.email
-    );
-    const isPasswordValid = validateField(
-      passwordField,
-      passwordError,
-      validationRules.password
-    );
+    const isEmailValid = validateFieldEmail();
+    const isPasswordValid = validateFieldPassword();
 
     if (isEmailValid && isPasswordValid) {
       console.log({

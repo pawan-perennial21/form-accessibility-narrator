@@ -15,6 +15,7 @@
         name="email"
         aria-describedby="emailError"
         aria-required="true"
+        oninput="validateFieldEmail()"
       />
       <span id="emailError" class="error-message" aria-live="polite"></span>
 
@@ -25,11 +26,12 @@
         name="password"
         aria-describedby="passwordError"
         aria-required="true"
+        oninput="validateFieldPassword()"
       />
       <span id="passwordError" class="error-message" aria-live="polite"></span>
 
       <button type="submit">Submit</button>
     </form>
+    <script src="./main.js"></script>
   </body>
-  <script src="./main.js"></script>
 </html>
