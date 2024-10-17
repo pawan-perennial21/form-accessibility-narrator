@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessible Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form id="accessibleForm">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        aria-describedby="emailError"
+        aria-required="true"
+      />
+      <span id="emailError" class="error-message" aria-live="polite"></span>
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        aria-describedby="passwordError"
+        aria-required="true"
+      />
+      <span id="passwordError" class="error-message" aria-live="polite"></span>
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+  <script src="./main.js"></script>
+</html>
